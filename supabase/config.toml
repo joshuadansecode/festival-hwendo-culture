@@ -1,0 +1,5 @@
+[functions.leekpay-checkout]
+verify_jwt = false
+
+[functions.leekpay-webhook]
+verify_jwt = false

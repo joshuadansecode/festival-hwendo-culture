@@ -1,0 +1,176 @@
+@import "tailwindcss";
+
+:root {
+  --surface-page: #080808;
+  --surface-card: #171717;
+  --surface-soft: #262626;
+  --text-main: #fafafa;
+  --text-muted: #a3a3a3;
+}
+
+@layer base {
+  [data-theme="light"] {
+    color-scheme: light;
+  }
+  [data-theme="dark"] {
+    color-scheme: dark;
+  }
+}
+
+/* Smooth transition between light & dark mode */
+body {
+  transition: background-color 0.3s ease, color 0.3s ease;
+  background: var(--surface-page);
+  color: var(--text-main);
+}
+
+.display-title,
+h1,
+h2 {
+  font-family: Georgia, "Times New Roman", serif;
+}
+
+.drawer-enter {
+  animation: drawer-enter 240ms cubic-bezier(.2,.8,.2,1) both;
+}
+
+.live-badge {
+  animation: live-pulse 1.8s ease-in-out infinite;
+}
+
+@keyframes drawer-enter {
+  from { transform: translateX(100%); opacity: 0; }
+  to { transform: translateX(0); opacity: 1; }
+}
+
+@keyframes live-pulse {
+  0%, 100% { opacity: 1; box-shadow: 0 0 0 0 rgba(220, 38, 38, .35); }
+  50% { opacity: .82; box-shadow: 0 0 0 5px rgba(220, 38, 38, 0); }
+}
+
+/* Elegant Light Mode with Gold Accents */
+[data-theme="light"] body {
+  --surface-page: #f4ecdf;
+  --surface-card: #fffaf2;
+  --surface-soft: #eadfce;
+  --text-main: #261b14;
+  --text-muted: #6f6258;
+  background-color: var(--surface-page);
+  color: var(--text-main);
+}
+
+[data-theme="light"] .bg-neutral-950 {
+  background-color: var(--surface-page) !important;
+}
+
+[data-theme="light"] .bg-neutral-900 {
+  background-color: var(--surface-card) !important;
+  box-shadow: 0 4px 20px -2px rgba(217, 119, 6, 0.08), 0 2px 6px -1px rgba(0, 0, 0, 0.04);
+}
+
+[data-theme="light"] .bg-neutral-800,
+[data-theme="light"] .bg-neutral-800\/70 {
+  background-color: var(--surface-soft) !important;
+}
+
+[data-theme="light"] .bg-black\/40,
+[data-theme="light"] .bg-black\/60 {
+  background-color: rgba(83, 58, 40, 0.12) !important;
+}
+
+[data-theme="light"] .bg-neutral-900\/50,
+[data-theme="light"] .bg-neutral-900\/80,
+[data-theme="light"] .bg-neutral-900\/90 {
+  background-color: rgba(255, 255, 255, 0.95) !important;
+}
+
+[data-theme="light"] .bg-neutral-950\/90 {
+  background-color: rgba(250, 247, 242, 0.95) !important;
+}
+
+[data-theme="light"] .border-neutral-800 {
+  border-color: #d8cab8 !important;
+}
+
+[data-theme="light"] .border-neutral-700 {
+  border-color: #cdbca7 !important;
+}
+
+[data-theme="light"] .border-neutral-900 {
+  border-color: #F5F5F4 !important;
+}
+
+[data-theme="light"] .text-white {
+  color: #1C1917 !important;
+}
+
+[data-theme="light"] .text-gray-300,
+[data-theme="light"] .text-gray-400 {
+  color: #65584f !important;
+}
+
+[data-theme="light"] .text-gray-500 {
+  color: #7c6e63 !important;
+}
+
+[data-theme="light"] .text-gray-200 {
+  color: #292524 !important;
+}
+
+[data-theme="light"] .text-amber-400 {
+  color: #B45309 !important;
+}
+
+[data-theme="light"] .text-amber-300 {
+  color: #D97706 !important;
+}
+
+[data-theme="light"] header {
+  background-color: rgba(255, 250, 242, 0.96) !important;
+  border-bottom-color: rgba(217, 119, 6, 0.25) !important;
+}
+
+[data-theme="light"] footer {
+  background-color: #2c2119 !important;
+}
+
+[data-theme="light"] footer .text-white,
+[data-theme="light"] footer .text-gray-200 {
+  color: #fffaf2 !important;
+}
+
+[data-theme="light"] footer .text-gray-300,
+[data-theme="light"] footer .text-gray-400,
+[data-theme="light"] footer .text-gray-500 {
+  color: #d8cab8 !important;
+}
+
+[data-theme="light"] .media-overlay,
+[data-theme="light"] .media-overlay .text-white,
+[data-theme="light"] .media-overlay .text-gray-200,
+[data-theme="light"] .media-overlay .text-gray-300,
+[data-theme="light"] .media-overlay .text-gray-400 {
+  color: #fff !important;
+}
+
+[data-theme="light"] input,
+[data-theme="light"] textarea,
+[data-theme="light"] select {
+  background-color: #FFFFFF !important;
+  color: #1C1917 !important;
+  border-color: #D6D3D1 !important;
+}
+
+[data-theme="light"] input::placeholder,
+[data-theme="light"] textarea::placeholder {
+  color: #78716C !important;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    scroll-behavior: auto !important;
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+}
