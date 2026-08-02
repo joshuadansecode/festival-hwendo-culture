@@ -25,6 +25,7 @@ import {
   initialFaqs
 } from '../data/initialData';
 import { supabase } from '../lib/supabase';
+import { pathForTab, tabFromPath } from '../lib/routes';
 
 export type TabType = 
   | 'accueil' 
@@ -125,7 +126,7 @@ const FestivalContext = createContext<FestivalContextType | undefined>(undefined
 const LOCAL_STORAGE_KEY = 'hwendo_festival_state_v1';
 
 export const FestivalProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
-  const [activeTab, setActiveTabState] = useState<TabType>('accueil');
+  const [activeTab, setActiveTabState] = useState<TabType>(() => tabFromPath(window.location.pathname));
   const [theme, setThemeState] = useState<'dark' | 'light'>(() => {
     try {
       const saved = localStorage.getItem(LOCAL_STORAGE_KEY);
@@ -170,26 +171,33 @@ export const FestivalProvider: React.FC<{ children: React.ReactNode }> = ({ chil
     document.documentElement.setAttribute('data-theme', theme);
   }, [theme]);
 
-  // Load state from local storage on boot
   useEffect(() => {
-    try {
-      const saved = localStorage.getItem(LOCAL_STORAGE_KEY);
-      if (saved) {
-        const parsed = JSON.parse(saved);
-        if (parsed.theme) setTheme(parsed.theme);
-        if (parsed.participants) setParticipants(parsed.participants);
-        if (parsed.events) setEvents(parsed.events);
-        if (parsed.committee) setCommittee(parsed.committee);
-        if (parsed.news) setNews(parsed.news);
-        if (parsed.gallery) setGallery(parsed.gallery);
-        if (parsed.votingConfig) setVotingConfig(parsed.votingConfig);
-        if (parsed.transactions) setTransactions(parsed.transactions);
-        if (parsed.faqs) setFaqs(parsed.faqs);
-      }
-    } catch (e) {
-      console.error("Failed to load state from localStorage", e);
-    }
+    const handleHistoryNavigation = () => {
+      setActiveTabState(tabFromPath(window.location.pathname));
+      window.scrollTo({ top: 0, behavior: 'auto' });
+    };
+    window.addEventListener('popstate', handleHistoryNavigation);
+    return () => window.removeEventListener('popstate', handleHistoryNavigation);
   }, []);
+
+  useEffect(() => {
+    const titles: Record<TabType, string> = {
+      accueil: 'Festival HWENDO-CULTURE',
+      festival: 'Le Festival | HWENDO-CULTURE',
+      'miss-endo': 'Miss ENDO-CULTURE',
+      'nuit-elegance': "Nuit de l'Élégance Africaine",
+      'match-gala': 'Match de Gala HWENDO',
+      participants: 'Participants | HWENDO-CULTURE',
+      voter: 'Voter | HWENDO-CULTURE',
+      programme: 'Programme | HWENDO-CULTURE',
+      actualites: 'Actualités | HWENDO-CULTURE',
+      galerie: 'Galerie | HWENDO-CULTURE',
+      comite: "Comité d'organisation | HWENDO-CULTURE",
+      contact: 'Contact | HWENDO-CULTURE',
+      admin: 'Administration | HWENDO-CULTURE',
+    };
+    document.title = titles[activeTab];
+  }, [activeTab]);
 
   // Load the remaining public editorial content when records exist remotely.
   useEffect(() => {
@@ -208,7 +216,13 @@ export const FestivalProvider: React.FC<{ children: React.ReactNode }> = ({ chil
       ]);
       if (cancelled) return;
 
-      if (eventsResult.data?.length) setEvents(eventsResult.data.map((item) => ({
+      const queryError = eventsResult.error || committeeResult.error || newsResult.error || faqResult.error || votingResult.error || partnersResult.error || programResult.error;
+      if (queryError) {
+        console.error('Failed to load editorial content from Supabase', queryError);
+        return;
+      }
+
+      setEvents((eventsResult.data ?? []).map((item) => ({
         id: item.id,
         title: item.title,
         subtitle: item.subtitle,
@@ -221,7 +235,7 @@ export const FestivalProvider: React.FC<{ children: React.ReactNode }> = ({ chil
         programItems: item.program_items ?? [],
         jury: item.jury ?? [],
       })));
-      if (committeeResult.data?.length) setCommittee(committeeResult.data.map((item) => ({
+      setCommittee((committeeResult.data ?? []).map((item) => ({
         id: item.id,
         name: item.name,
         role: item.role,
@@ -232,7 +246,7 @@ export const FestivalProvider: React.FC<{ children: React.ReactNode }> = ({ chil
         facebook: item.facebook ?? undefined,
         displayOrder: item.display_order,
       })));
-      if (newsResult.data?.length) setNews(newsResult.data.map((item) => ({
+      setNews((newsResult.data ?? []).map((item) => ({
         id: item.id,
         title: item.title,
         slug: item.slug,
@@ -244,13 +258,13 @@ export const FestivalProvider: React.FC<{ children: React.ReactNode }> = ({ chil
         author: item.author,
         featured: item.featured,
       })));
-      if (faqResult.data?.length) setFaqs(faqResult.data.map((item) => ({
+      setFaqs((faqResult.data ?? []).map((item) => ({
         id: item.id,
         q: item.question,
         a: item.answer,
         displayOrder: item.display_order,
       })));
-      if (partnersResult.data?.length) setPartners(partnersResult.data.map((item) => ({
+      setPartners((partnersResult.data ?? []).map((item) => ({
         id: item.id,
         name: item.name,
         logo: item.logo,
@@ -258,7 +272,7 @@ export const FestivalProvider: React.FC<{ children: React.ReactNode }> = ({ chil
         websiteUrl: item.website_url ?? undefined,
         description: item.description ?? undefined,
       })));
-      if (programResult.data?.length) setProgram(programResult.data.map((item) => ({
+      setProgram((programResult.data ?? []).map((item) => ({
         id: item.id,
         date: item.activity_date,
         time: item.activity_time,
@@ -294,9 +308,13 @@ export const FestivalProvider: React.FC<{ children: React.ReactNode }> = ({ chil
         .select('id,number,name,category,country,community,photo,biography,project_description,votes_count,vote_active,socials')
         .order('number', { ascending: true });
 
-      if (cancelled || error || !data?.length) return;
+      if (cancelled) return;
+      if (error) {
+        console.error('Failed to load participants from Supabase', error);
+        return;
+      }
       const localById = new Map(initialParticipants.map((participant) => [participant.id, participant]));
-      setParticipants(data.map((item) => ({
+      setParticipants((data ?? []).map((item) => ({
         id: item.id,
         number: item.number,
         name: item.name,
@@ -453,7 +471,11 @@ export const FestivalProvider: React.FC<{ children: React.ReactNode }> = ({ chil
         .select('id,title,media_type,url,storage_path,thumbnail_url,event_category,edition,media_date,created_at')
         .order('created_at', { ascending: false });
 
-      if (cancelled || error || !data?.length) return;
+      if (cancelled) return;
+      if (error) {
+        console.error('Failed to load gallery from Supabase', error);
+        return;
+      }
 
       const remoteGallery: GalleryItem[] = data
         .map((item) => {
@@ -474,34 +496,29 @@ export const FestivalProvider: React.FC<{ children: React.ReactNode }> = ({ chil
         })
         .filter((item) => Boolean(item.url));
 
-      if (remoteGallery.length) setGallery(remoteGallery);
+      setGallery(remoteGallery);
     };
 
     void loadRemoteGallery();
     return () => { cancelled = true; };
   }, []);
 
-  // Sync state to local storage when changed
+  // Only presentation preferences belong in local storage. Supabase is the
+  // single source of truth for all festival content and transactions.
   useEffect(() => {
     try {
-      localStorage.setItem(LOCAL_STORAGE_KEY, JSON.stringify({
-        theme,
-        participants,
-        events,
-        committee,
-        news,
-        gallery,
-        votingConfig,
-        transactions,
-        faqs
-      }));
+      localStorage.setItem(LOCAL_STORAGE_KEY, JSON.stringify({ theme }));
     } catch (e) {
-      console.error("Failed to save state to localStorage", e);
+      console.error("Failed to save theme to localStorage", e);
     }
-  }, [theme, participants, events, committee, news, gallery, votingConfig, transactions, faqs]);
+  }, [theme]);
 
   const setActiveTab = (tab: TabType) => {
     setActiveTabState(tab);
+    const nextPath = pathForTab(tab);
+    if (window.location.pathname !== nextPath) {
+      window.history.pushState({ tab }, '', nextPath);
+    }
     window.scrollTo({ top: 0, behavior: 'smooth' });
   };
 
@@ -648,8 +665,9 @@ export const FestivalProvider: React.FC<{ children: React.ReactNode }> = ({ chil
       if (updated.votesCount !== undefined) payload.votes_count = updated.votesCount;
       if (updated.voteActive !== undefined) payload.vote_active = updated.voteActive;
       if (updated.socials !== undefined) payload.socials = updated.socials;
-      const { error } = await supabase.from('participants').update(payload).eq('id', id);
+      const { data, error } = await supabase.from('participants').update(payload).eq('id', id).select('id').maybeSingle();
       if (error) throw new Error(error.message);
+      if (!data) throw new Error('Participant introuvable dans Supabase. Rechargez la page avant de modifier.');
     }
     setParticipants(prev => prev.map(p => p.id === id ? { ...p, ...updated } : p));
     void logAdminActivity('update', 'participant', id, updated as Record<string, unknown>);
@@ -657,8 +675,9 @@ export const FestivalProvider: React.FC<{ children: React.ReactNode }> = ({ chil
 
   const deleteParticipant = async (id: string) => {
     if (supabase) {
-      const { error } = await supabase.from('participants').delete().eq('id', id);
+      const { data, error } = await supabase.from('participants').delete().eq('id', id).select('id').maybeSingle();
       if (error) throw new Error(error.message);
+      if (!data) throw new Error('Participant introuvable dans Supabase.');
     }
     setParticipants(prev => prev.filter(p => p.id !== id));
     void logAdminActivity('delete', 'participant', id);
@@ -668,13 +687,14 @@ export const FestivalProvider: React.FC<{ children: React.ReactNode }> = ({ chil
     if (supabase) {
       const current = events.find((event) => event.id === eventId);
       if (!current) return;
-      const { error } = await supabase.from('events').upsert({
+      const { data, error } = await supabase.from('events').upsert({
         id: current.id, title: current.title, subtitle: current.subtitle,
         logo_url: current.logoUrl ?? null, description: current.description,
         event_date: date, event_time: time, location, status: current.status,
         program_items: current.programItems, jury: current.jury ?? [],
-      });
+      }).select('id').single();
       if (error) throw new Error(error.message);
+      if (!data) throw new Error('Événement non enregistré dans Supabase.');
     }
     setEvents(prev => prev.map(ev => ev.id === eventId ? { ...ev, location, date, time } : ev));
     void logAdminActivity('update', 'event', eventId, { location, date, time });
@@ -685,7 +705,7 @@ export const FestivalProvider: React.FC<{ children: React.ReactNode }> = ({ chil
     if (!current) return;
     const next = { ...current, ...updated };
     if (supabase) {
-      const { error } = await supabase.from('events').upsert({
+      const { data, error } = await supabase.from('events').upsert({
         id: next.id,
         title: next.title,
         subtitle: next.subtitle,
@@ -697,8 +717,9 @@ export const FestivalProvider: React.FC<{ children: React.ReactNode }> = ({ chil
         status: next.status,
         program_items: next.programItems,
         jury: next.jury ?? [],
-      });
+      }).select('id').single();
       if (error) throw new Error(error.message);
+      if (!data) throw new Error('Événement non enregistré dans Supabase.');
     }
     setEvents((items) => items.map((event) => event.id === eventId ? next : event));
     void logAdminActivity('update', 'event', eventId, updated as Record<string, unknown>);
@@ -707,7 +728,7 @@ export const FestivalProvider: React.FC<{ children: React.ReactNode }> = ({ chil
   const updateVotingConfig = async (config: Partial<VotingCampaignConfig>) => {
     const next = { ...votingConfig, ...config };
     if (supabase) {
-      const { error } = await supabase.from('voting_config').upsert({
+      const { data, error } = await supabase.from('voting_config').upsert({
         id: true,
         price_per_vote_fcfa: next.pricePerVoteFCFA,
         currency: next.currency,
@@ -716,8 +737,9 @@ export const FestivalProvider: React.FC<{ children: React.ReactNode }> = ({ chil
         is_voting_open: next.isVotingOpen,
         show_leaderboard_publicly: next.showLeaderboardPublicly,
         min_votes_per_purchase: next.minVotesPerPurchase,
-      });
+      }).select('id').single();
       if (error) throw new Error(error.message);
+      if (!data) throw new Error('Configuration de vote non enregistrée dans Supabase.');
     }
     setVotingConfig(prev => ({ ...prev, ...config }));
     void logAdminActivity('update', 'voting_config', 'primary', config as Record<string, unknown>);
@@ -776,8 +798,9 @@ export const FestivalProvider: React.FC<{ children: React.ReactNode }> = ({ chil
 
   const deleteCommitteeMember = async (id: string) => {
     if (supabase) {
-      const { error } = await supabase.from('committee_members').delete().eq('id', id);
+      const { data, error } = await supabase.from('committee_members').delete().eq('id', id).select('id').maybeSingle();
       if (error) throw new Error(error.message);
+      if (!data) throw new Error('Membre introuvable dans Supabase.');
     }
     setCommittee(prev => prev.filter(c => c.id !== id));
     void logAdminActivity('delete', 'committee', id);
@@ -805,8 +828,9 @@ export const FestivalProvider: React.FC<{ children: React.ReactNode }> = ({ chil
       if (updated.q !== undefined) payload.question = updated.q;
       if (updated.a !== undefined) payload.answer = updated.a;
       if (updated.displayOrder !== undefined) payload.display_order = updated.displayOrder;
-      const { error } = await supabase.from('faqs').update(payload).eq('id', id);
+      const { data, error } = await supabase.from('faqs').update(payload).eq('id', id).select('id').maybeSingle();
       if (error) throw new Error(error.message);
+      if (!data) throw new Error('FAQ introuvable dans Supabase.');
     }
     setFaqs(prev => prev.map(f => f.id === id ? { ...f, ...updated } : f));
     void logAdminActivity('update', 'faq', id);
@@ -814,8 +838,9 @@ export const FestivalProvider: React.FC<{ children: React.ReactNode }> = ({ chil
 
   const deleteFaq = async (id: string) => {
     if (supabase) {
-      const { error } = await supabase.from('faqs').delete().eq('id', id);
+      const { data, error } = await supabase.from('faqs').delete().eq('id', id).select('id').maybeSingle();
       if (error) throw new Error(error.message);
+      if (!data) throw new Error('FAQ introuvable dans Supabase.');
     }
     setFaqs(prev => prev.filter(f => f.id !== id));
     void logAdminActivity('delete', 'faq', id);
@@ -833,8 +858,9 @@ export const FestivalProvider: React.FC<{ children: React.ReactNode }> = ({ chil
       if (updated.date !== undefined) payload.published_date = updated.date;
       if (updated.author !== undefined) payload.author = updated.author;
       if (updated.featured !== undefined) payload.featured = updated.featured;
-      const { error } = await supabase.from('news').update(payload).eq('id', id);
+      const { data, error } = await supabase.from('news').update(payload).eq('id', id).select('id').maybeSingle();
       if (error) throw new Error(error.message);
+      if (!data) throw new Error('Article introuvable dans Supabase.');
     }
     setNews((current) => current.map((item) => item.id === id ? { ...item, ...updated } : item));
     void logAdminActivity('update', 'news', id, updated as Record<string, unknown>);
@@ -842,8 +868,9 @@ export const FestivalProvider: React.FC<{ children: React.ReactNode }> = ({ chil
 
   const deleteNewsArticle = async (id: string) => {
     if (supabase) {
-      const { error } = await supabase.from('news').delete().eq('id', id);
+      const { data, error } = await supabase.from('news').delete().eq('id', id).select('id').maybeSingle();
       if (error) throw new Error(error.message);
+      if (!data) throw new Error('Article introuvable dans Supabase.');
     }
     setNews((current) => current.filter((item) => item.id !== id));
     void logAdminActivity('delete', 'news', id);
@@ -859,8 +886,9 @@ export const FestivalProvider: React.FC<{ children: React.ReactNode }> = ({ chil
       if (updated.category !== undefined) payload.event_category = updated.category;
       if (updated.edition !== undefined) payload.edition = updated.edition;
       if (updated.date !== undefined) payload.media_date = updated.date;
-      const { error } = await supabase.from('gallery_items').update(payload).eq('id', id);
+      const { data, error } = await supabase.from('gallery_items').update(payload).eq('id', id).select('id').maybeSingle();
       if (error) throw new Error(error.message);
+      if (!data) throw new Error('Média introuvable dans Supabase.');
     }
     setGallery((current) => current.map((item) => item.id === id ? { ...item, ...updated } : item));
     void logAdminActivity('update', 'gallery', id);
@@ -868,8 +896,9 @@ export const FestivalProvider: React.FC<{ children: React.ReactNode }> = ({ chil
 
   const deleteGalleryItem = async (id: string) => {
     if (supabase) {
-      const { error } = await supabase.from('gallery_items').delete().eq('id', id);
+      const { data, error } = await supabase.from('gallery_items').delete().eq('id', id).select('id').maybeSingle();
       if (error) throw new Error(error.message);
+      if (!data) throw new Error('Média introuvable dans Supabase.');
     }
     setGallery((current) => current.filter((item) => item.id !== id));
     void logAdminActivity('delete', 'gallery', id);
@@ -886,8 +915,9 @@ export const FestivalProvider: React.FC<{ children: React.ReactNode }> = ({ chil
       if (updated.whatsapp !== undefined) payload.whatsapp = updated.whatsapp;
       if (updated.facebook !== undefined) payload.facebook = updated.facebook;
       if (updated.displayOrder !== undefined) payload.display_order = updated.displayOrder;
-      const { error } = await supabase.from('committee_members').update(payload).eq('id', id);
+      const { data, error } = await supabase.from('committee_members').update(payload).eq('id', id).select('id').maybeSingle();
       if (error) throw new Error(error.message);
+      if (!data) throw new Error('Membre introuvable dans Supabase.');
     }
     setCommittee((current) => current.map((item) => item.id === id ? { ...item, ...updated } : item));
     void logAdminActivity('update', 'committee', id);
@@ -914,8 +944,9 @@ export const FestivalProvider: React.FC<{ children: React.ReactNode }> = ({ chil
       if (updated.category !== undefined) payload.category = updated.category;
       if (updated.websiteUrl !== undefined) payload.website_url = updated.websiteUrl;
       if (updated.description !== undefined) payload.description = updated.description;
-      const { error } = await supabase.from('partners').update(payload).eq('id', id);
+      const { data, error } = await supabase.from('partners').update(payload).eq('id', id).select('id').maybeSingle();
       if (error) throw new Error(error.message);
+      if (!data) throw new Error('Partenaire introuvable dans Supabase.');
     }
     setPartners((current) => current.map((item) => item.id === id ? { ...item, ...updated } : item));
     void logAdminActivity('update', 'partner', id);
@@ -923,8 +954,9 @@ export const FestivalProvider: React.FC<{ children: React.ReactNode }> = ({ chil
 
   const deletePartner = async (id: string) => {
     if (supabase) {
-      const { error } = await supabase.from('partners').delete().eq('id', id);
+      const { data, error } = await supabase.from('partners').delete().eq('id', id).select('id').maybeSingle();
       if (error) throw new Error(error.message);
+      if (!data) throw new Error('Partenaire introuvable dans Supabase.');
     }
     setPartners((current) => current.filter((item) => item.id !== id));
     void logAdminActivity('delete', 'partner', id);
@@ -954,8 +986,9 @@ export const FestivalProvider: React.FC<{ children: React.ReactNode }> = ({ chil
       if (updated.location !== undefined) payload.location = updated.location;
       if (updated.description !== undefined) payload.description = updated.description;
       if (updated.status !== undefined) payload.status = updated.status;
-      const { error } = await supabase.from('program_activities').update(payload).eq('id', id);
+      const { data, error } = await supabase.from('program_activities').update(payload).eq('id', id).select('id').maybeSingle();
       if (error) throw new Error(error.message);
+      if (!data) throw new Error('Activité introuvable dans Supabase.');
     }
     setProgram((current) => current.map((item) => item.id === id ? { ...item, ...updated } : item));
     void logAdminActivity('update', 'program', id);
@@ -963,8 +996,9 @@ export const FestivalProvider: React.FC<{ children: React.ReactNode }> = ({ chil
 
   const deleteProgramActivity = async (id: string) => {
     if (supabase) {
-      const { error } = await supabase.from('program_activities').delete().eq('id', id);
+      const { data, error } = await supabase.from('program_activities').delete().eq('id', id).select('id').maybeSingle();
       if (error) throw new Error(error.message);
+      if (!data) throw new Error('Activité introuvable dans Supabase.');
     }
     setProgram((current) => current.filter((item) => item.id !== id));
     void logAdminActivity('delete', 'program', id);

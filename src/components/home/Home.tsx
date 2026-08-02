@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { useFestival } from '../../context/FestivalContext';
 import { LogoFestivalHwendo, LogoMissEndo, LogoNuitElegance } from '../common/Logos';
+import { CountryFlag } from '../common/CountryFlag';
 import { 
   Trophy, Sparkles, Calendar, Vote, Heart, ArrowRight, ShieldCheck, 
   MapPin, Clock, Users, Play, Newspaper, CheckCircle2 
@@ -17,6 +18,9 @@ export const Home: React.FC = () => {
     openVoteModalForParticipant,
     votingConfig 
   } = useFestival();
+  const missEvent = events.find((event) => event.id === 'miss-endo');
+  const eleganceEvent = events.find((event) => event.id === 'nuit-elegance');
+  const galaEvent = events.find((event) => event.id === 'match-gala');
 
   // Countdown timer calculation to next event (12 Nov 2026)
   const targetDate = new Date('2026-11-12T09:00:00');
@@ -145,18 +149,18 @@ export const Home: React.FC = () => {
           <div className="bg-neutral-900 border border-amber-500/30 rounded-2xl p-6 space-y-4 hover:border-amber-400 transition-all flex flex-col justify-between group shadow-xl">
             <div className="space-y-3">
               <LogoMissEndo className="h-10" />
-              <h3 className="text-xl font-bold text-amber-400">Concours Miss ENDO-CULTURE</h3>
+              <h3 className="text-xl font-bold text-amber-400">{missEvent?.title ?? 'Concours Miss ENDO-CULTURE'}</h3>
               <p className="text-xs text-gray-300 leading-relaxed">
-                Élection de l'ambassadrice des valeurs traditionnelles, des contes, danses et projets sociaux culturels béninois.
+                {missEvent?.description ?? "Élection de l'ambassadrice des valeurs traditionnelles, des contes, danses et projets sociaux culturels béninois."}
               </p>
               <div className="space-y-1 text-xs text-gray-400">
                 <div className="flex items-center space-x-2">
                   <MapPin className="w-4 h-4 text-amber-400" />
-                  <span>Salle du Peuple de la Mairie d'Abomey-Calavi</span>
+                  <span>{missEvent?.location ?? 'Lieu à confirmer'}</span>
                 </div>
                 <div className="flex items-center space-x-2">
                   <Calendar className="w-4 h-4 text-amber-400" />
-                  <span>Vendredi 13 Novembre 2026 • 19h00</span>
+                  <span>{missEvent ? `${missEvent.date} • ${missEvent.time}` : 'Date à confirmer'}</span>
                 </div>
               </div>
             </div>
@@ -174,18 +178,18 @@ export const Home: React.FC = () => {
           <div className="bg-neutral-900 border border-orange-500/30 rounded-2xl p-6 space-y-4 hover:border-orange-400 transition-all flex flex-col justify-between group shadow-xl">
             <div className="space-y-3">
               <LogoNuitElegance className="h-10" />
-              <h3 className="text-xl font-bold text-orange-400">Nuit de l'Élégance Africaine</h3>
+              <h3 className="text-xl font-bold text-orange-400">{eleganceEvent?.title ?? "Nuit de l'Élégance Africaine"}</h3>
               <p className="text-xs text-gray-300 leading-relaxed">
-                Concours Top Model-Mannequin Afrique et Élection du Meilleur Créateur / Styliste avec présentation des collections Tissu Kanvo.
+                {eleganceEvent?.description ?? 'Concours Top Model-Mannequin Afrique et Élection du Meilleur Créateur / Styliste.'}
               </p>
               <div className="space-y-1 text-xs text-gray-400">
                 <div className="flex items-center space-x-2">
                   <MapPin className="w-4 h-4 text-orange-400" />
-                  <span>Lieu prestigieux (Modifiable depuis l'admin)</span>
+                  <span>{eleganceEvent?.location ?? 'Lieu à confirmer'}</span>
                 </div>
                 <div className="flex items-center space-x-2">
                   <Calendar className="w-4 h-4 text-orange-400" />
-                  <span>Samedi 14 Novembre 2026 • 20h00</span>
+                  <span>{eleganceEvent ? `${eleganceEvent.date} • ${eleganceEvent.time}` : 'Date à confirmer'}</span>
                 </div>
               </div>
             </div>
@@ -206,18 +210,18 @@ export const Home: React.FC = () => {
                 <Trophy className="w-5 h-5 text-emerald-400" />
                 <span className="text-xs font-black text-emerald-400 uppercase">Match de Gala HWENDO</span>
               </div>
-              <h3 className="text-xl font-bold text-emerald-400">Ancienne vs Nouvelle Génération</h3>
+              <h3 className="text-xl font-bold text-emerald-400">{galaEvent?.subtitle ?? 'Ancienne vs Nouvelle Génération'}</h3>
               <p className="text-xs text-gray-300 leading-relaxed">
-                Rencontre fraternelle entre les légendes historiques du sport béninois et les jeunes prodiges montants.
+                {galaEvent?.description ?? 'Rencontre fraternelle entre les légendes historiques du sport béninois et les jeunes prodiges montants.'}
               </p>
               <div className="space-y-1 text-xs text-gray-400">
                 <div className="flex items-center space-x-2">
                   <MapPin className="w-4 h-4 text-emerald-400" />
-                  <span>Terrain synthétique d'Abomey-Calavi</span>
+                  <span>{galaEvent?.location ?? 'Lieu à confirmer'}</span>
                 </div>
                 <div className="flex items-center space-x-2">
                   <Calendar className="w-4 h-4 text-emerald-400" />
-                  <span>Dimanche 15 Novembre 2026 • 16h00</span>
+                  <span>{galaEvent ? `${galaEvent.date} • ${galaEvent.time}` : 'Date à confirmer'}</span>
                 </div>
               </div>
             </div>
@@ -281,7 +285,7 @@ export const Home: React.FC = () => {
                     {participant.category.replace('-', ' ')}
                   </span>
                   <h3 className="font-extrabold text-base leading-tight mt-1">{participant.name}</h3>
-                  <p className="text-xs text-gray-300 font-medium">{participant.country}{participant.community ? ` • ${participant.community}` : ''}</p>
+                  <p className="text-xs text-gray-300 font-medium"><CountryFlag country={participant.country} />{participant.community ? ` • ${participant.community}` : ''}</p>
                 </div>
               </div>
 
@@ -291,7 +295,7 @@ export const Home: React.FC = () => {
                     <Heart className="w-4 h-4 text-red-500 fill-red-500" />
                     <strong>{participant.votesCount.toLocaleString()} votes</strong>
                   </span>
-                  <span className="text-emerald-400 font-semibold">{participant.country}</span>
+                  <span className="text-emerald-400 font-semibold"><CountryFlag country={participant.country} /></span>
                 </div>
 
                 <button

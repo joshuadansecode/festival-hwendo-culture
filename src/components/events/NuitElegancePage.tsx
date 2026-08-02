@@ -1,12 +1,13 @@
 import React from 'react';
 import { useFestival } from '../../context/FestivalContext';
 import { LogoNuitElegance } from '../common/Logos';
+import { CountryFlag } from '../common/CountryFlag';
 import { Sparkles, Calendar, MapPin, Heart, Vote, Users, Award, ShieldCheck } from 'lucide-react';
 
 export const NuitElegancePage: React.FC = () => {
   const { participants, events, openVoteModalForParticipant } = useFestival();
   
-  const eventDetails = events.find(e => e.id === 'nuit-elegance') || events[1];
+  const eventDetails = events.find(e => e.id === 'nuit-elegance');
   const topModels = participants.filter(p => p.category === 'top-model');
   const stylistes = participants.filter(p => p.category === 'styliste');
 
@@ -21,10 +22,10 @@ export const NuitElegancePage: React.FC = () => {
 
          <div className="relative space-y-2">
           <h1 className="text-3xl sm:text-5xl font-black text-orange-400 uppercase tracking-tight">
-            La Nuit de l'Élégance Africaine
+             {eventDetails?.title ?? "La Nuit de l'Élégance Africaine"}
           </h1>
           <p className="text-sm text-gray-300 max-w-2xl mx-auto">
-            Gala de haute couture africaine, célébrant la beauté du mannequinat et le génie des créateurs de mode.
+             {eventDetails?.description ?? 'Gala de haute couture africaine, célébrant la beauté du mannequinat et le génie des créateurs de mode.'}
           </p>
         </div>
 
@@ -32,12 +33,12 @@ export const NuitElegancePage: React.FC = () => {
         <div className="inline-flex flex-wrap items-center justify-center gap-4 bg-black/60 border border-orange-500/30 px-6 py-3 rounded-xl text-xs font-bold text-orange-300">
           <div className="flex items-center space-x-2">
             <MapPin className="w-4 h-4 text-orange-400" />
-            <span>Lieu : {eventDetails.location}</span>
+             <span>Lieu : {eventDetails?.location ?? 'à confirmer'}</span>
           </div>
           <span>•</span>
           <div className="flex items-center space-x-2">
             <Calendar className="w-4 h-4 text-orange-400" />
-            <span>{eventDetails.date} • {eventDetails.time}</span>
+             <span>{eventDetails ? `${eventDetails.date} • ${eventDetails.time}` : 'Date à confirmer'}</span>
           </div>
         </div>
       </div>
@@ -81,7 +82,7 @@ export const NuitElegancePage: React.FC = () => {
                 </span>
                 <div className="absolute bottom-3 left-3 right-3 text-white">
                   <h3 className="font-extrabold text-base">{tm.name}</h3>
-                  <p className="text-xs text-orange-300 font-bold">{tm.community} • {tm.country}</p>
+                  <p className="text-xs text-orange-300 font-bold"><CountryFlag country={tm.country} />{tm.community ? ` • ${tm.community}` : ''}</p>
                 </div>
               </div>
 

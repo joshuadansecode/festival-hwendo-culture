@@ -1,7 +1,10 @@
 import React from 'react';
 import { Trophy, Calendar, MapPin, Shield, Users, Activity } from 'lucide-react';
+import { useFestival } from '../../context/FestivalContext';
 
 export const MatchGalaPage: React.FC = () => {
+  const { events } = useFestival();
+  const eventDetails = events.find((event) => event.id === 'match-gala');
   return (
     <div className="max-w-5xl mx-auto px-4 sm:px-6 py-12 space-y-12 text-white">
       
@@ -13,22 +16,22 @@ export const MatchGalaPage: React.FC = () => {
         </div>
 
         <h1 className="text-3xl sm:text-5xl font-black uppercase text-white tracking-tight">
-          Ancienne Génération <span className="text-emerald-400">vs</span> Nouvelle Génération
+          {eventDetails?.subtitle ?? <>Ancienne Génération <span className="text-emerald-400">vs</span> Nouvelle Génération</>}
         </h1>
 
         <p className="text-sm text-gray-300 max-w-2xl mx-auto">
-          Rencontre sportive fraternelle opposant les légendes historiques du football béninois aux pépites de la nouvelle génération.
+          {eventDetails?.description ?? 'Rencontre sportive fraternelle opposant les légendes historiques du football béninois aux pépites de la nouvelle génération.'}
         </p>
 
         <div className="inline-flex flex-wrap items-center justify-center gap-4 bg-black/60 border border-emerald-500/30 px-6 py-3 rounded-xl text-xs font-bold text-emerald-300">
           <div className="flex items-center space-x-2">
             <MapPin className="w-4 h-4 text-emerald-400" />
-            <span>Terrain synthétique d'Abomey-Calavi</span>
+            <span>{eventDetails?.location ?? 'Lieu à confirmer'}</span>
           </div>
           <span>•</span>
           <div className="flex items-center space-x-2">
             <Calendar className="w-4 h-4 text-emerald-400" />
-            <span>Dimanche 15 Novembre 2026 • 16h00</span>
+            <span>{eventDetails ? `${eventDetails.date} • ${eventDetails.time}` : 'Date à confirmer'}</span>
           </div>
         </div>
       </div>

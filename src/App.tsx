@@ -18,9 +18,14 @@ import { GaleriePage } from './components/galerie/GaleriePage';
 import { ComitePage } from './components/comite/ComitePage';
 import { ContactPage } from './components/contact/ContactPage';
 import { AdminDashboard } from './components/admin/AdminDashboard';
+import { PaymentReturnPage } from './components/votes/PaymentReturnPage';
 
 const MainContent: React.FC = () => {
   const { activeTab } = useFestival();
+  const path = window.location.pathname.replace(/\/$/, '');
+
+  if (path === '/vote/success') return <PaymentReturnPage status="success" />;
+  if (path === '/vote/cancelled') return <PaymentReturnPage status="cancelled" />;
 
   if (activeTab === 'admin') {
     return (

@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { useFestival } from '../../context/FestivalContext';
+import { CountryFlag } from '../common/CountryFlag';
 import { Participant, ParticipantCategory } from '../../types';
 import { Search, Filter, Vote, Heart, Sparkles, UserCheck, X, Share2 } from 'lucide-react';
 
@@ -102,7 +103,7 @@ export const ParticipantsPage: React.FC = () => {
                   {participant.category.replace('-', ' ')}
                 </span>
                 <h3 className="font-extrabold text-base mt-1 leading-tight">{participant.name}</h3>
-                <p className="text-xs text-gray-300 font-medium">{participant.country}{participant.community ? ` • ${participant.community}` : ''}</p>
+                <p className="text-xs text-gray-300 font-medium"><CountryFlag country={participant.country} />{participant.community ? ` • ${participant.community}` : ''}</p>
               </div>
             </div>
 
@@ -165,7 +166,7 @@ export const ParticipantsPage: React.FC = () => {
                   N° {activeParticipantModal.number} • {activeParticipantModal.category.replace('-', ' ')}
                 </span>
                 <h2 className="text-2xl sm:text-3xl font-black mt-2">{activeParticipantModal.name}</h2>
-                <p className="text-amber-300 text-xs font-bold">{activeParticipantModal.community} • {activeParticipantModal.country}</p>
+                <p className="text-amber-300 text-xs font-bold"><CountryFlag country={activeParticipantModal.country} />{activeParticipantModal.community ? ` • ${activeParticipantModal.community}` : ''}</p>
               </div>
             </div>
 

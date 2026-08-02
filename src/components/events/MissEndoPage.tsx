@@ -4,7 +4,8 @@ import { LogoMissEndo } from '../common/Logos';
 import { Trophy, Calendar, MapPin, Heart, Vote, CheckCircle, Sparkles, Award } from 'lucide-react';
 
 export const MissEndoPage: React.FC = () => {
-  const { participants, openVoteModalForParticipant } = useFestival();
+  const { participants, events, openVoteModalForParticipant } = useFestival();
+  const eventDetails = events.find((event) => event.id === 'miss-endo');
   const missCandidates = participants.filter(p => p.category === 'miss-endo');
 
   return (
@@ -20,10 +21,10 @@ export const MissEndoPage: React.FC = () => {
         
          <div className="relative space-y-2">
           <h1 className="text-3xl sm:text-5xl font-black text-amber-400 uppercase tracking-tight">
-            Concours Miss ENDO-CULTURE
+            {eventDetails?.title ?? 'Concours Miss ENDO-CULTURE'}
           </h1>
           <p className="text-sm text-gray-300 max-w-2xl mx-auto">
-            Élection officielle de Miss ENDO-CULTURE, Première Dauphine et Deuxième Dauphine.
+            {eventDetails?.description ?? 'Élection officielle de Miss ENDO-CULTURE, Première Dauphine et Deuxième Dauphine.'}
           </p>
         </div>
 
@@ -31,12 +32,12 @@ export const MissEndoPage: React.FC = () => {
         <div className="inline-flex flex-wrap items-center justify-center gap-4 bg-black/60 border border-amber-500/30 px-6 py-3 rounded-xl text-xs font-bold text-amber-300">
           <div className="flex items-center space-x-2">
             <MapPin className="w-4 h-4 text-amber-400" />
-            <span>Salle du Peuple de la Mairie d'Abomey-Calavi</span>
+            <span>{eventDetails?.location ?? 'Lieu à confirmer'}</span>
           </div>
           <span>•</span>
           <div className="flex items-center space-x-2">
             <Calendar className="w-4 h-4 text-amber-400" />
-            <span>Vendredi 13 Novembre 2026 • 19h00</span>
+            <span>{eventDetails ? `${eventDetails.date} • ${eventDetails.time}` : 'Date à confirmer'}</span>
           </div>
         </div>
       </div>

@@ -1,12 +1,36 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { useFestival } from '../../context/FestivalContext';
 import { NewsArticle } from '../../types';
 import { Newspaper, Calendar, User, X, Share2, MessageCircle, Facebook, Link, ExternalLink, Phone, Mail, ClipboardCheck } from 'lucide-react';
+import { articleSlugFromPath } from '../../lib/routes';
 
 export const ActualitesPage: React.FC = () => {
   const { news } = useFestival();
   const [activeArticle, setActiveArticle] = useState<NewsArticle | null>(null);
   const [linkCopied, setLinkCopied] = useState(false);
+
+  useEffect(() => {
+    const syncArticleFromUrl = () => {
+      const slug = articleSlugFromPath(window.location.pathname);
+      setActiveArticle(slug ? news.find((article) => article.slug === slug) ?? null : null);
+    };
+    syncArticleFromUrl();
+    window.addEventListener('popstate', syncArticleFromUrl);
+    return () => window.removeEventListener('popstate', syncArticleFromUrl);
+  }, [news]);
+
+  const openArticle = (article: NewsArticle, replace = false) => {
+    setActiveArticle(article);
+    setLinkCopied(false);
+    const path = `/actualites/${encodeURIComponent(article.slug)}`;
+    window.history[replace ? 'replaceState' : 'pushState']({ article: article.slug }, '', path);
+  };
+
+  const closeArticle = () => {
+    setActiveArticle(null);
+    setLinkCopied(false);
+    window.history.pushState({}, '', '/actualites');
+  };
 
   const articleUrl = activeArticle
     ? `${window.location.origin}/actualites/${activeArticle.slug}`
@@ -58,7 +82,7 @@ export const ActualitesPage: React.FC = () => {
         {news.slice(0, 1).map((item) => (
           <div 
             key={item.id} 
-            onClick={() => setActiveArticle(item)}
+            onClick={() => openArticle(item)}
             className="group grid overflow-hidden rounded-2xl border border-amber-500/35 bg-neutral-900 shadow-xl transition-all duration-300 hover:-translate-y-1 hover:border-amber-500/70 md:grid-cols-[1.45fr_1fr] cursor-pointer"
           >
             <div className="relative min-h-64 bg-neutral-950 sm:min-h-80">
@@ -89,7 +113,7 @@ export const ActualitesPage: React.FC = () => {
 
         <div className="grid grid-cols-1 gap-6 md:grid-cols-2 xl:grid-cols-3">
         {news.slice(1).map((item) => (
-          <div key={item.id} onClick={() => setActiveArticle(item)} className="group flex cursor-pointer flex-col overflow-hidden rounded-2xl border border-neutral-800 bg-neutral-900 shadow-xl transition-all duration-300 hover:-translate-y-1 hover:border-amber-500/60">
+          <div key={item.id} onClick={() => openArticle(item)} className="group flex cursor-pointer flex-col overflow-hidden rounded-2xl border border-neutral-800 bg-neutral-900 shadow-xl transition-all duration-300 hover:-translate-y-1 hover:border-amber-500/60">
             <div className="relative h-48 bg-neutral-950">
               <img src={item.image} alt={item.title} loading="lazy" className="h-full w-full object-cover transition-transform duration-500 group-hover:scale-105" />
               <span className="absolute left-3 top-3 rounded bg-amber-500 px-2 py-0.5 text-[10px] font-bold uppercase text-black">{item.category}</span>
@@ -115,7 +139,7 @@ export const ActualitesPage: React.FC = () => {
               <span className="bg-amber-500 text-black text-xs font-black px-2.5 py-1 rounded-full uppercase">
                 {activeArticle.category}
               </span>
-              <button onClick={() => { setActiveArticle(null); setLinkCopied(false); }} className="p-2 text-gray-400 hover:text-white bg-neutral-800 rounded-full" aria-label="Fermer l'article">
+              <button onClick={closeArticle} className="p-2 text-gray-400 hover:text-white bg-neutral-800 rounded-full" aria-label="Fermer l'article">
                 <X className="w-5 h-5" />
               </button>
             </div>
@@ -180,7 +204,7 @@ export const ActualitesPage: React.FC = () => {
                 <p className="mb-3 text-xs font-black uppercase tracking-wider text-amber-400">À découvrir aussi</p>
                 <div className="grid gap-2 sm:grid-cols-2">
                   {relatedArticles.map((article) => (
-                    <button key={article.id} onClick={() => { setActiveArticle(article); setLinkCopied(false); }} className="flex items-center gap-3 rounded-lg bg-neutral-800/70 p-2 text-left hover:bg-neutral-800">
+                    <button key={article.id} onClick={() => openArticle(article, true)} className="flex items-center gap-3 rounded-lg bg-neutral-800/70 p-2 text-left hover:bg-neutral-800">
                       <img src={article.image} alt="" className="h-12 w-16 rounded object-cover" />
                       <span className="line-clamp-2 text-xs font-bold text-gray-200">{article.title}</span>
                     </button>

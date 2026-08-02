@@ -23,6 +23,20 @@ export const initialVotingConfig: VotingCampaignConfig = {
 export const initialParticipants: Participant[] = [
   // Top Model Category
   {
+    id: 'part-tm-19',
+    number: '19',
+    name: 'Doukoué Magro',
+    category: 'top-model',
+    country: 'Guinée',
+    community: '',
+    photo: 'https://images.unsplash.com/photo-1506794778202-cad84cf45f1d?auto=format&fit=crop&q=80&w=800',
+    biography: 'Originaire de Guinée, Doukoué Magro incarne l’élégance, le charisme et la fierté de la jeunesse africaine.',
+    projectDescription: 'Valoriser l’identité culturelle du continent et démontrer que la mode est un puissant moyen d’expression, de rassemblement et de promotion des richesses africaines.',
+    votesCount: 0,
+    voteActive: true,
+    socials: {}
+  },
+  {
     id: 'part-tm-18',
     number: '18',
     name: 'VLAVONOU Nélly Rose',
