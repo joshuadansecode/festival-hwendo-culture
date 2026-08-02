@@ -8,7 +8,11 @@ export const ParticipantProfilePage: React.FC<{ participantId: string }> = ({ pa
   const [copied, setCopied] = useState(false);
   const participant = participants.find((item) => item.id === participantId);
 
-  if (!participant) return null;
+  if (!participant) {
+    window.history.replaceState({}, '', '/participants');
+    setActiveTab('participants');
+    return null;
+  }
 
   const profileUrl = `${window.location.origin}/participants/${encodeURIComponent(participant.id)}`;
   const shareText = `Soutenez ${participant.name}, candidat(e) n°${participant.number} au Festival HWENDO-CULTURE.`;
@@ -35,7 +39,7 @@ export const ParticipantProfilePage: React.FC<{ participantId: string }> = ({ pa
             <p className="text-xs font-black uppercase tracking-wider text-amber-400">Son projet</p>
             <p className="mt-2 text-sm leading-6 text-gray-300">{participant.projectDescription || 'Projet culturel à découvrir prochainement.'}</p>
           </div>
-          {participant.voteActive && <button onClick={() => openVoteModalForParticipant(participant)} className="w-full rounded-xl bg-amber-500 px-5 py-3 text-xs font-black uppercase text-black hover:bg-amber-400"><Vote className="mr-2 inline h-4 w-4" />Voter pour ce candidat</button>}
+          {participant.voteActive && <button onClick={() => { window.history.pushState({}, '', `/voter?participant=${encodeURIComponent(participant.id)}`); window.dispatchEvent(new PopStateEvent('popstate')); }} className="w-full rounded-xl bg-amber-500 px-5 py-3 text-xs font-black uppercase text-black hover:bg-amber-400"><Vote className="mr-2 inline h-4 w-4" />Voter pour ce candidat</button>}
           <div className="text-xs text-gray-500"><Heart className="mr-1 inline h-3.5 w-3.5 text-red-400" />{participant.votesCount.toLocaleString()} votes actuels</div>
           <div className="border-t border-neutral-800 pt-4">
             <p className="mb-3 text-xs font-black uppercase tracking-wider text-amber-400"><Share2 className="mr-2 inline h-4 w-4" />Partager ce candidat</p>

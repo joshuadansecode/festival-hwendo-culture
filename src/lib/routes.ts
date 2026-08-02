@@ -38,6 +38,8 @@ export const participantIdFromPath = (pathname: string) => {
   return match ? decodeURIComponent(match[1]) : null;
 };
 
+export const participantIdFromVotePath = () => new URLSearchParams(window.location.search).get('participant');
+
 export const pathForTab = (tab: TabType) => tabRoutes[tab];
 
 export const articleSlugFromPath = (pathname: string) => {

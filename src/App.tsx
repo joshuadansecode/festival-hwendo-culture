@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { lazy, Suspense } from 'react';
 import { FestivalProvider, useFestival } from './context/FestivalContext';
 import { Navbar } from './components/common/Navbar';
 import { Footer } from './components/common/Footer';
@@ -17,7 +17,7 @@ import { ActualitesPage } from './components/actualites/ActualitesPage';
 import { GaleriePage } from './components/galerie/GaleriePage';
 import { ComitePage } from './components/comite/ComitePage';
 import { ContactPage } from './components/contact/ContactPage';
-import { AdminDashboard } from './components/admin/AdminDashboard';
+const AdminDashboard = lazy(() => import('./components/admin/AdminDashboard').then((module) => ({ default: module.AdminDashboard })));
 import { PaymentReturnPage } from './components/votes/PaymentReturnPage';
 import { NotFoundPage } from './components/common/NotFoundPage';
 import { ParticipantProfilePage } from './components/participants/ParticipantProfilePage';
@@ -36,7 +36,7 @@ const MainContent: React.FC = () => {
   if (activeTab === 'admin') {
     return (
       <main className="min-h-screen overflow-x-hidden bg-neutral-950 font-sans text-gray-100 selection:bg-amber-500 selection:text-black">
-        <AdminDashboard />
+        <Suspense fallback={<div className="flex min-h-screen items-center justify-center text-sm text-gray-400">Chargement de l’administration...</div>}><AdminDashboard /></Suspense>
       </main>
     );
   }

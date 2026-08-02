@@ -402,7 +402,7 @@ export const initialEvents: FestivalEvent[] = [
     description: 'Grande soirée consacrée à la mode africaine, au mannequinat culturel et au génie créatif des plus grands stylistes et créateurs de mode du continent.',
     date: 'Samedi 14 Novembre 2026',
     time: '20h00 précises',
-    location: 'Grand Palais des Congrès / Lieu prestigieux (à confirmer depuis l’admin)',
+    location: 'Lieu à confirmer depuis l’administration',
     status: 'à venir',
     programItems: [
       { time: '19h30', title: 'Tapis Rouge & Cocktail Culturel', description: 'Accueil des VIP, partenaires et médias sur le tapis rouge prestige.' },

@@ -194,7 +194,8 @@ export const ParticipantsPage: React.FC = () => {
                   onClick={() => {
                     const p = activeParticipantModal;
                     setActiveParticipantModal(null);
-                    openVoteModalForParticipant(p);
+                    window.history.pushState({}, '', `/voter?participant=${encodeURIComponent(p.id)}`);
+                    window.dispatchEvent(new PopStateEvent('popstate'));
                   }}
                   className="px-6 py-3 bg-amber-500 hover:bg-amber-400 text-black font-black text-xs uppercase rounded-xl flex items-center space-x-2"
                 >

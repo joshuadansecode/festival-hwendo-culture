@@ -47,8 +47,8 @@ export const ReceiptModal: React.FC = () => {
           <div className="w-12 h-12 bg-white/20 rounded-full flex items-center justify-center mx-auto mb-2 backdrop-blur-sm">
             <CheckCircle2 className="w-8 h-8 text-white" />
           </div>
-          <h3 className="font-extrabold text-lg">Paiement Réussi !</h3>
-          <p className="text-xs text-emerald-100 font-medium">Votes comptabilisés en direct</p>
+          <h3 className="font-extrabold text-lg">Paiement confirmé</h3>
+          <p className="text-xs text-emerald-100 font-medium">Reçu de vote sécurisé</p>
         </div>
 
         {/* Printable Receipt area */}
@@ -110,19 +110,13 @@ export const ReceiptModal: React.FC = () => {
             </div>
           </div>
 
-          {/* Simulated QR Code */}
           <div className="flex items-center justify-between bg-neutral-900 p-3 rounded-xl text-[10px] text-gray-400">
             <div className="space-y-1">
               <p className="font-bold text-gray-300">Authenticité Garantie</p>
               <p>Festival HWENDO-CULTURE Bénin</p>
               <p>WhatsApp: +229 01 60 74 44 15</p>
             </div>
-            <div className="w-12 h-12 bg-white p-1 rounded flex items-center justify-center">
-              {/* Simple SVG QR Code mockup */}
-              <svg viewBox="0 0 24 24" className="w-full h-full fill-black">
-                <path d="M2,2H10V10H2V2ZM4,4V8H8V4H4ZM14,2H22V10H14V2ZM16,4V8H20V4H16ZM2,14H10V22H2V14ZM4,16V20H8V16H4ZM14,14H18V18H14V14ZM18,18H22V22H18V18ZM14,18H18V22H14V18Z" />
-              </svg>
-            </div>
+            <span className="rounded-lg border border-emerald-500/30 px-2 py-1 text-emerald-300">Référence vérifiable</span>
           </div>
 
         </div>

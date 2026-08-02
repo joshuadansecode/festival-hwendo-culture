@@ -43,6 +43,7 @@ Deno.serve(async (request) => {
       status: nextStatus,
       leekpay_status: payment.status,
       transaction_ref: payment.transaction_id || checkoutId,
+      payment_method_label: payment.payment_method || payment.method || null,
     }).eq('id', transaction.id).eq('status', 'en_attente').select('id').maybeSingle();
     if (updateError) return json({ error: 'Transaction update failed' }, 500);
 

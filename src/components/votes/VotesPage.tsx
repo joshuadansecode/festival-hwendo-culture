@@ -1,11 +1,19 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { useFestival } from '../../context/FestivalContext';
 import { Vote, Search, Trophy, Sparkles, Heart, ShieldCheck, CheckCircle2 } from 'lucide-react';
+import { participantIdFromVotePath } from '../../lib/routes';
 
 export const VotesPage: React.FC = () => {
   const { participants, openVoteModalForParticipant, votingConfig } = useFestival();
   const [searchTerm, setSearchTerm] = useState('');
   const [selectedCategory, setSelectedCategory] = useState<string>('all');
+
+  useEffect(() => {
+    const participantId = participantIdFromVotePath();
+    if (!participantId) return;
+    const participant = participants.find((item) => item.id === participantId);
+    if (participant) openVoteModalForParticipant(participant);
+  }, [participants]);
 
   const filteredCandidates = participants.filter((p) => {
     const matchesCategory = selectedCategory === 'all' || p.category === selectedCategory;
@@ -111,7 +119,7 @@ export const VotesPage: React.FC = () => {
                   N° {candidate.number} • {candidate.category.replace('-', ' ')}
                 </span>
                 <h3 className="font-extrabold text-white text-base mt-1">{candidate.name}</h3>
-                <p className="text-xs text-gray-400">{candidate.community}</p>
+            <p className="text-xs text-gray-400">{candidate.country}{candidate.community ? ` • ${candidate.community}` : ''}</p>
               </div>
             </div>
 

@@ -1,5 +1,5 @@
 import React from 'react';
-import { CheckCircle2, Home, RotateCcw, ShieldCheck, XCircle } from 'lucide-react';
+import { CheckCircle2, Clock3, Home, RotateCcw, ShieldCheck, XCircle } from 'lucide-react';
 import { useFestival } from '../../context/FestivalContext';
 
 interface PaymentReturnPageProps {
@@ -31,7 +31,7 @@ export const PaymentReturnPage: React.FC<PaymentReturnPageProps> = ({ status }) 
         </h1>
         <p className="mx-auto mt-4 max-w-md text-sm leading-6 text-gray-400">
           {successful
-            ? 'LeekPay a traité votre paiement. Vos votes sont crédités automatiquement dès la confirmation sécurisée du webhook.'
+            ? 'LeekPay a reçu votre paiement. La comptabilisation est en cours de confirmation sécurisée.'
             : "Aucun vote n'a été débité. Vous pouvez reprendre le processus quand vous le souhaitez."}
         </p>
 
@@ -41,6 +41,8 @@ export const PaymentReturnPage: React.FC<PaymentReturnPageProps> = ({ status }) 
             <span>La comptabilisation est effectuée côté serveur et protégée contre les confirmations en double.</span>
           </div>
         )}
+
+        {successful && <div className="mt-3 flex items-center justify-center gap-2 text-xs text-gray-400"><Clock3 className="h-4 w-4 text-amber-400" />Le classement se met à jour après réception du webhook.</div>}
 
         <div className="mt-8 grid gap-3 sm:grid-cols-2">
           <button onClick={() => leaveReturnPage('voter')} className="inline-flex items-center justify-center gap-2 rounded-xl bg-amber-500 px-5 py-3 text-xs font-black uppercase text-black hover:bg-amber-400">
