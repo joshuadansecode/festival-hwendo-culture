@@ -34,7 +34,7 @@ export const ParticipantsPage: React.FC = () => {
         <span className="text-xs font-bold uppercase tracking-widest text-amber-400">
           Les visages de l'édition 2026
         </span>
-        <h1 className="text-3xl sm:text-5xl font-black uppercase tracking-tight">
+        <h1 className="text-3xl sm:text-5xl font-black uppercase tracking-tight leading-tight">
           Candidates & Participants
         </h1>
         <p className="text-sm text-gray-400 max-w-xl mx-auto">
@@ -143,7 +143,7 @@ export const ParticipantsPage: React.FC = () => {
 
       {/* Participant Detail Modal Drawer */}
       {activeParticipantModal && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/85 backdrop-blur-md overflow-y-auto">
+        <div className="mobile-safe-modal fixed inset-0 z-50 flex items-start justify-center p-3 pt-20 bg-black/85 backdrop-blur-md overflow-y-auto sm:items-center sm:p-4 sm:pt-4">
           <div className="relative w-full max-w-2xl bg-neutral-900 border border-amber-500/40 rounded-2xl shadow-2xl overflow-hidden my-8 text-white">
             
             <div className="relative h-64 sm:h-80 bg-neutral-950">

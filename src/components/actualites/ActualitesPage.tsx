@@ -72,7 +72,7 @@ export const ActualitesPage: React.FC = () => {
       
       <div className="text-center space-y-2">
         <span className="text-xs font-bold uppercase tracking-widest text-amber-400">Presse & Communiqués</span>
-        <h1 className="text-3xl sm:text-5xl font-black uppercase tracking-tight">Actualités du Festival</h1>
+        <h1 className="text-3xl sm:text-5xl font-black uppercase tracking-tight leading-tight">Actualités du Festival</h1>
         <p className="text-sm text-gray-400 max-w-xl mx-auto">
           Suivez toutes les annonces officielles, résumés de conférences et résultats intermédiaires.
         </p>
@@ -131,7 +131,7 @@ export const ActualitesPage: React.FC = () => {
 
       {/* Article Detail Modal */}
       {activeArticle && (
-        <div className="fixed inset-0 z-50 bg-black/85 backdrop-blur-md overflow-y-auto overscroll-contain">
+        <div className="mobile-safe-modal fixed inset-0 z-50 flex items-start justify-center bg-black/85 p-3 pt-20 backdrop-blur-md overflow-y-auto overscroll-contain sm:items-center sm:p-4 sm:pt-4">
           <div className="min-h-full flex items-start justify-center p-4 pt-20 sm:pt-24 pb-10">
             <div className="relative w-full max-w-2xl bg-neutral-900 border border-amber-500/40 rounded-2xl shadow-2xl text-white p-5 sm:p-6 space-y-4">
             

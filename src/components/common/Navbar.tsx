@@ -44,10 +44,10 @@ export const Navbar: React.FC = () => {
     <header translate="no" className="sticky top-0 z-40 bg-neutral-950/90 backdrop-blur-md border-b border-amber-500/30 text-white transition-all shadow-xl">
       
       {/* Top Banner announcement */}
-      <div className="bg-gradient-to-r from-amber-600 via-amber-500 to-amber-600 text-black px-4 py-1.5 text-xs font-bold flex items-center justify-between">
+      <div className="bg-gradient-to-r from-amber-600 via-amber-500 to-amber-600 text-black px-3 py-2 sm:py-1.5 text-[10px] sm:text-xs font-bold flex items-center justify-center sm:justify-between">
         <div className="flex items-center space-x-2 mx-auto sm:mx-0">
           <Sparkles className="w-3.5 h-3.5 fill-black" />
-          <span className="leading-tight">FESTIVAL HWENDO-CULTURE 2026 — Votes ouverts (100 FCFA / vote)</span>
+          <span className="truncate leading-tight text-center">FESTIVAL HWENDO-CULTURE 2026 — Votes ouverts (100 FCFA / vote)</span>
         </div>
         <div className="hidden md:flex items-center space-x-4 text-[11px] font-extrabold">
           <a href="https://wa.me/2290160744415" target="_blank" rel="noopener noreferrer" className="hover:underline flex items-center space-x-1">
@@ -65,14 +65,14 @@ export const Navbar: React.FC = () => {
       </div>
 
       <div className="max-w-[1440px] mx-auto px-4 sm:px-6 xl:px-8">
-        <div className="flex items-center justify-between h-20">
+        <div className="flex items-center justify-between h-16 sm:h-20">
           
           {/* Logo */}
           <button 
             onClick={() => handleNavClick('accueil')} 
             className="flex items-center text-left focus:outline-none group"
           >
-            <LogoFestivalHwendo variant="color" className="h-12" />
+            <LogoFestivalHwendo variant="color" className="h-10 sm:h-12" />
           </button>
 
           {/* Desktop Navigation */}
@@ -190,7 +190,7 @@ export const Navbar: React.FC = () => {
 
             <button
               onClick={() => handleNavClick('voter')}
-              className="px-3 py-1.5 bg-amber-500 text-black text-xs font-black rounded-lg uppercase"
+              className="hidden xs:inline-flex px-3 py-1.5 bg-amber-500 text-black text-[10px] sm:text-xs font-black rounded-lg uppercase"
             >
               Voter
             </button>

@@ -54,7 +54,7 @@ export const VoteModal: React.FC = () => {
   };
 
   return (
-    <div translate="no" className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/80 backdrop-blur-md overflow-y-auto">
+    <div translate="no" className="mobile-safe-modal fixed inset-0 z-50 flex items-start justify-center p-3 pt-20 bg-black/80 backdrop-blur-md overflow-y-auto sm:items-center sm:p-4 sm:pt-4">
       <div className="relative w-full max-w-lg bg-neutral-900 border border-amber-500/40 rounded-2xl shadow-2xl overflow-hidden my-8">
         
         {/* Header */}
@@ -107,7 +107,7 @@ export const VoteModal: React.FC = () => {
               Choisir le nombre de votes ({pricePerVote} FCFA / vote)
             </label>
 
-            <div className="grid grid-cols-3 sm:grid-cols-6 gap-2">
+            <div className="grid grid-cols-2 min-[420px]:grid-cols-3 sm:grid-cols-6 gap-2">
               {quickPackages.map((qty) => (
                 <button
                   key={qty}

@@ -20,7 +20,7 @@ export const MissEndoPage: React.FC = () => {
         <div className="relative"><LogoMissEndo className="h-16 mx-auto" /></div>
         
          <div className="relative space-y-2">
-          <h1 className="text-3xl sm:text-5xl font-black text-amber-400 uppercase tracking-tight">
+          <h1 className="text-3xl sm:text-5xl font-black text-amber-400 uppercase tracking-tight leading-tight">
             {eventDetails?.title ?? 'Concours Miss ENDO-CULTURE'}
           </h1>
           <p className="text-sm text-gray-300 max-w-2xl mx-auto">
@@ -29,7 +29,7 @@ export const MissEndoPage: React.FC = () => {
         </div>
 
         {/* Location & Date Badge */}
-        <div className="inline-flex flex-wrap items-center justify-center gap-4 bg-black/60 border border-amber-500/30 px-6 py-3 rounded-xl text-xs font-bold text-amber-300">
+        <div className="mx-auto inline-flex max-w-full flex-col items-start justify-center gap-2 bg-black/60 border border-amber-500/30 px-4 py-3 rounded-xl text-xs font-bold text-amber-300 sm:flex-row sm:items-center sm:gap-4 sm:px-6">
           <div className="flex items-center space-x-2">
             <MapPin className="w-4 h-4 text-amber-400" />
             <span>{eventDetails?.location ?? 'Lieu à confirmer'}</span>

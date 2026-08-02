@@ -54,7 +54,7 @@ export const Home: React.FC = () => {
     <div className="space-y-16 pb-16">
       
       {/* 1. HERO SECTION WITH COUNTDOWN */}
-      <section className="relative min-h-[85vh] flex items-center justify-center bg-neutral-950 overflow-hidden border-b border-amber-500/20 px-4 sm:px-6">
+      <section className="relative min-h-[680px] sm:min-h-[85vh] flex items-center justify-center bg-neutral-950 overflow-hidden border-b border-amber-500/20 px-4 sm:px-6">
         
         {/* Decorative Background Artwork */}
         {gallery[0]?.url && <img src={gallery[0].url} alt="" aria-hidden="true" className="absolute inset-0 h-full w-full object-cover opacity-35" />}
@@ -72,7 +72,7 @@ export const Home: React.FC = () => {
 
           {/* Main Title */}
           <div className="space-y-4">
-            <h1 className="display-title text-4xl sm:text-6xl md:text-7xl font-black text-white tracking-tight uppercase">
+            <h1 className="display-title text-4xl sm:text-6xl md:text-7xl font-black text-white tracking-tight uppercase leading-[0.95]">
               FESTIVAL <span className="text-transparent bg-clip-text bg-gradient-to-r from-amber-400 via-amber-200 to-amber-500">HWENDO-CULTURE</span>
             </h1>
             <p className="max-w-2xl mx-auto text-base sm:text-lg text-gray-300 font-medium leading-relaxed">
@@ -85,7 +85,7 @@ export const Home: React.FC = () => {
             <p className="text-xs font-extrabold uppercase tracking-widest text-amber-400">
               Compte à rebours avant le grand lancement
             </p>
-            <div className="grid grid-cols-4 gap-3 text-center">
+          <div className="grid grid-cols-2 sm:grid-cols-4 gap-2 sm:gap-3 text-center">
               <div className="bg-neutral-950 p-3 rounded-xl border border-neutral-800">
                 <span className="block text-2xl sm:text-4xl font-black text-amber-400">{timeLeft.days}</span>
                 <span className="text-[10px] text-gray-400 uppercase font-bold">Jours</span>

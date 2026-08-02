@@ -32,7 +32,7 @@ export const ReceiptModal: React.FC = () => {
   };
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/85 backdrop-blur-md overflow-y-auto">
+    <div className="mobile-safe-modal fixed inset-0 z-50 flex items-start justify-center p-3 pt-20 bg-black/85 backdrop-blur-md overflow-y-auto sm:items-center sm:p-4 sm:pt-4">
       <div className="relative w-full max-w-md bg-neutral-900 border border-amber-500/50 rounded-2xl shadow-2xl overflow-hidden my-8">
         
         {/* Top Celebration banner */}

@@ -15,7 +15,7 @@ export const MatchGalaPage: React.FC = () => {
           <span className="font-black text-emerald-400 uppercase tracking-widest text-sm">Match de Gala HWENDO</span>
         </div>
 
-        <h1 className="text-3xl sm:text-5xl font-black uppercase text-white tracking-tight">
+        <h1 className="text-3xl sm:text-5xl font-black uppercase text-white tracking-tight leading-tight">
           {eventDetails?.subtitle ?? <>Ancienne Génération <span className="text-emerald-400">vs</span> Nouvelle Génération</>}
         </h1>
 
@@ -23,7 +23,7 @@ export const MatchGalaPage: React.FC = () => {
           {eventDetails?.description ?? 'Rencontre sportive fraternelle opposant les légendes historiques du football béninois aux pépites de la nouvelle génération.'}
         </p>
 
-        <div className="inline-flex flex-wrap items-center justify-center gap-4 bg-black/60 border border-emerald-500/30 px-6 py-3 rounded-xl text-xs font-bold text-emerald-300">
+        <div className="mx-auto inline-flex max-w-full flex-col items-start justify-center gap-2 bg-black/60 border border-emerald-500/30 px-4 py-3 rounded-xl text-xs font-bold text-emerald-300 sm:flex-row sm:items-center sm:gap-4 sm:px-6">
           <div className="flex items-center space-x-2">
             <MapPin className="w-4 h-4 text-emerald-400" />
             <span>{eventDetails?.location ?? 'Lieu à confirmer'}</span>

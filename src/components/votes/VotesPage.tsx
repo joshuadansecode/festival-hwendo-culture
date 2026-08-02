@@ -28,7 +28,7 @@ export const VotesPage: React.FC = () => {
           <span>Portail de Vote Sécurisé • {votingConfig.pricePerVoteFCFA} FCFA / Vote</span>
         </div>
 
-        <h1 className="text-3xl sm:text-5xl font-black uppercase text-white tracking-tight">
+        <h1 className="text-3xl sm:text-5xl font-black uppercase text-white tracking-tight leading-tight">
           Plateforme Officielle de Votes en Ligne
         </h1>
 
