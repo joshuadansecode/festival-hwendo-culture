@@ -33,7 +33,7 @@ export const VotesPage: React.FC = () => {
         </h1>
 
         <p className="text-sm text-gray-300 max-w-2xl mx-auto leading-relaxed">
-          Sélectionnez votre candidat(e) ou participant(e) favori(e), choisissez le nombre de votes et réglez en toute sécurité via MTN MoMo, Moov Money, Celtiis Cash ou Carte Bancaire.
+          Sélectionnez votre candidat(e) ou participant(e) favori(e), choisissez le nombre de votes et suivez le parcours de paiement sécurisé proposé par LeekPay.
         </p>
 
         <div className="flex flex-wrap items-center justify-center gap-6 pt-2 text-xs text-amber-300 font-bold">

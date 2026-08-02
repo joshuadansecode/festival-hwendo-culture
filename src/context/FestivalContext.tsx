@@ -78,13 +78,6 @@ interface FestivalContextType {
   signOutAdmin: () => Promise<void>;
 
   // Actions
-  processVote: (voteData: {
-    participantId: string;
-    quantity: number;
-    voterName: string;
-    voterPhone: string;
-    paymentMethod: 'MTN Mobile Money' | 'Moov Money' | 'Celtiis Cash' | 'Carte Bancaire';
-  }) => { success: boolean; transaction?: VoteTransaction; error?: string };
   startLeekPayCheckout: (voteData: {
     participantId: string;
     quantity: number;
@@ -534,68 +527,10 @@ export const FestivalProvider: React.FC<{ children: React.ReactNode }> = ({ chil
     .reduce((sum, t) => sum + t.totalAmountFCFA, 0);
   
   const adminStats: AdminStats = {
-    totalVisitorsCount: 48920 + transactions.length * 5,
+    totalVisitorsCount: null,
     totalVotesCount: totalVotesCount,
     totalRevenueFCFA: totalRevenueFCFA,
     activeCandidatesCount: participants.filter(p => p.voteActive).length
-  };
-
-  // Voting action
-  const processVote = (voteData: {
-    participantId: string;
-    quantity: number;
-    voterName: string;
-    voterPhone: string;
-    paymentMethod: 'MTN Mobile Money' | 'Moov Money' | 'Celtiis Cash' | 'Carte Bancaire';
-  }) => {
-    if (!votingConfig.isVotingOpen) {
-      return { success: false, error: "Les votes sont actuellement fermés." };
-    }
-
-    const participant = participants.find(p => p.id === voteData.participantId);
-    if (!participant) {
-      return { success: false, error: "Participant non trouvé." };
-    }
-
-    const totalAmount = voteData.quantity * votingConfig.pricePerVoteFCFA;
-    const refRandom = Math.floor(100000 + Math.random() * 900000);
-    const receiptNum = `REC-HW2026-${Date.now().toString().slice(-6)}`;
-
-    const newTransaction: VoteTransaction = {
-      id: `tx-${Date.now()}`,
-      receiptNumber: receiptNum,
-      participantId: participant.id,
-      participantName: participant.name,
-      participantNumber: participant.number,
-      category: participant.category,
-      quantity: voteData.quantity,
-      pricePerVoteFCFA: votingConfig.pricePerVoteFCFA,
-      totalAmountFCFA: totalAmount,
-      voterName: voteData.voterName || 'Anonyme',
-      voterPhone: voteData.voterPhone,
-      paymentMethod: voteData.paymentMethod,
-      status: 'reussi',
-      timestamp: new Date().toISOString(),
-      transactionRef: `PAY-BENIN-${refRandom}`
-    };
-
-    // Update participant votes count
-    setParticipants(prev => prev.map(p => {
-      if (p.id === participant.id) {
-        return { ...p, votesCount: p.votesCount + voteData.quantity };
-      }
-      return p;
-    }));
-
-    // Record transaction
-    setTransactions(prev => [newTransaction, ...prev]);
-
-    // Set current receipt and open receipt modal
-    setCurrentReceipt(newTransaction);
-    setIsVoteModalOpen(false);
-    setIsReceiptModalOpen(true);
-
-    return { success: true, transaction: newTransaction };
   };
 
   const startLeekPayCheckout = async (voteData: {
@@ -1038,7 +973,6 @@ export const FestivalProvider: React.FC<{ children: React.ReactNode }> = ({ chil
       signInAdmin,
       signOutAdmin,
 
-      processVote,
       startLeekPayCheckout,
       addParticipant,
       updateParticipant,

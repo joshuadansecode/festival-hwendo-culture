@@ -125,7 +125,7 @@ export interface ProgramActivity {
 }
 
 export interface AdminStats {
-  totalVisitorsCount: number;
+  totalVisitorsCount: number | null;
   totalVotesCount: number;
   totalRevenueFCFA: number;
   activeCandidatesCount: number;

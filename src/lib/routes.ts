@@ -33,6 +33,11 @@ export const tabFromPath = (pathname: string): TabType => {
   return routeTabs[path] ?? 'accueil';
 };
 
+export const participantIdFromPath = (pathname: string) => {
+  const match = normalizePath(pathname).match(/^\/participants\/([^/]+)$/);
+  return match ? decodeURIComponent(match[1]) : null;
+};
+
 export const pathForTab = (tab: TabType) => tabRoutes[tab];
 
 export const articleSlugFromPath = (pathname: string) => {

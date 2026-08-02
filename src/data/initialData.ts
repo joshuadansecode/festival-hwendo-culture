@@ -732,7 +732,7 @@ export const initialFaqs: FaqItem[] = [
   {
     id: 'faq-01',
     q: "Comment voter pour une candidate ou un participant ?",
-    a: "Rendez-vous sur l'onglet 'Voter' ou sur la fiche du candidat, choisissez le nombre de votes (100 FCFA / vote) et effectuez le paiement sécurisé via MTN MoMo, Moov Money, Celtiis Cash ou Carte Bancaire.",
+    a: "Rendez-vous sur l'onglet 'Voter' ou sur la fiche du candidat, choisissez le nombre de votes et suivez le parcours de paiement sécurisé proposé par LeekPay.",
     displayOrder: 1
   },
   {

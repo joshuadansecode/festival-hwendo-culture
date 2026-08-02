@@ -19,6 +19,9 @@ import { ComitePage } from './components/comite/ComitePage';
 import { ContactPage } from './components/contact/ContactPage';
 import { AdminDashboard } from './components/admin/AdminDashboard';
 import { PaymentReturnPage } from './components/votes/PaymentReturnPage';
+import { NotFoundPage } from './components/common/NotFoundPage';
+import { ParticipantProfilePage } from './components/participants/ParticipantProfilePage';
+import { participantIdFromPath, tabFromPath } from './lib/routes';
 
 const MainContent: React.FC = () => {
   const { activeTab } = useFestival();
@@ -26,6 +29,9 @@ const MainContent: React.FC = () => {
 
   if (path === '/vote/success') return <PaymentReturnPage status="success" />;
   if (path === '/vote/cancelled') return <PaymentReturnPage status="cancelled" />;
+  const participantId = participantIdFromPath(path);
+  if (participantId) return <ParticipantProfilePage participantId={participantId} />;
+  if (path && tabFromPath(path) === 'accueil') return <NotFoundPage />;
 
   if (activeTab === 'admin') {
     return (

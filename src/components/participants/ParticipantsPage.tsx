@@ -84,7 +84,7 @@ export const ParticipantsPage: React.FC = () => {
             className="bg-neutral-900 border border-neutral-800 rounded-2xl overflow-hidden hover:-translate-y-1 hover:border-amber-500/60 transition-all duration-300 group flex flex-col justify-between shadow-xl"
           >
             <div 
-              onClick={() => setActiveParticipantModal(participant)}
+                onClick={() => { window.history.pushState({}, '', `/participants/${encodeURIComponent(participant.id)}`); window.dispatchEvent(new PopStateEvent('popstate')); }}
               className="relative aspect-[4/5] bg-neutral-950 cursor-pointer overflow-hidden"
             >
               <img 
